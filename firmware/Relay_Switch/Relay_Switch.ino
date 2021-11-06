@@ -9,6 +9,7 @@
 #include <WiFiClient.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <PubSubClient.h>
 
 
 
