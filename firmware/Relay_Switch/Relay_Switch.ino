@@ -18,26 +18,28 @@ ESP8266WiFiMulti WiFiMulti;
 #define HTTP_REST_PORT 8080
 AsyncWebServer httpRestServer(HTTP_REST_PORT);
 
+#define MQTT_SERVER "MQTT.SERVER"
+PubSubClient mqttClient;// = (MQTT_SERVER, 1883, callback, WiFiMulti)
+
 const byte switch_01 = 0; // GPIO-0
 const byte switch_02 = 2; // GPIO-2
 const byte switch_03 = 1; // TX
 const byte switch_04 = 3; // RX
 
-// const char* ssid; const char* password; // read these from config later
-
-const char* ssid = "M K Das Jio";
-const char* password = "Kalyani3120";
+const char* ssid;// = "M K Das Jio";
+const char* password;// = "Kalyani3120";
+const char* mqttServer;
 
 
 void setup() {
   Serial.begin(115200);
-  //initFS();
-  manageConnection();
+  initFS();
+//  manageConnection();
 }
 
 void loop() {
   //   Serial.println("Looping - OK");
-//  httpRestServer.handleClient();
+  //  httpRestServer.handleClient();
 }
 
 /**
@@ -77,7 +79,38 @@ void manageConnection() {
     }
     }*/
 }
+void configureDevice() {
+  if (canConnectRouter() && canConnectMQTT()) {
+    enterActiveMode();
+  } else {
+    enterSetupMode();
+  }
+}
+bool canConnectRouter() {
+  if (!loadConfigs()) {
+    return false;
+  }
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  int attempts = 1;
+  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+    delay(1000);
+    attempts++;
+  }
+  return WiFi.status() == WL_CONNECTED;
+}
 
+bool canConnectMQTT() {
+  return true;
+}
+
+void enterSetupMode() {
+
+}
+
+void enterActiveMode() {
+  
+}
 void setupRoutes() {
   // Send a GET request to <ESP_IP>/on?switch=<switchId>
   httpRestServer.on("/on", HTTP_GET, [] (AsyncWebServerRequest * request) {
@@ -126,57 +159,42 @@ void resetDevice() {
 /**
    Connects to WiFi router when available
 */
-bool connectToRouter() {
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  int attempts = 1;
-  while (WiFi.status() != WL_CONNECTED && attempts < 20) {
-    delay(1000);
-    attempts++;
-  }
-  return WiFi.status() == WL_CONNECTED;
-}
 /**
    Reads SSID and Password from config file
 */
-bool loadWiFiConfig() {
-  // test code //
-  // ssid = "M K Das Jio";
-  // password = "Kalyani3120";
-  return true;
-  /*
-    File configFile = LittleFS.open("/config.json", "r");
-    if (!configFile) {
+bool loadConfigs() {
+  File configFile = LittleFS.open("/config.json", "r");
+  if (!configFile) {
     Serial.println("loadWiFiConfig: no config file");
     return false;
-    }
+  }
 
-    size_t size = configFile.size();
-    if (size > 1024) {
+  size_t size = configFile.size();
+  if (size > 1024) {
     Serial.println("loadWiFiConfig: config too large");
     return false;
-    }
+  }
 
-    // Allocate a buffer to store contents of the file.
-    std::unique_ptr<char[]> buf(new char[size]);
+  // Allocate a buffer to store contents of the file.
+  std::unique_ptr<char[]> buf(new char[size]);
 
-    // We don't use String here because ArduinoJson library requires the input
-    // buffer to be mutable. If you don't use ArduinoJson, you may as well
-    // use configFile.readString instead.
-    configFile.readBytes(buf.get(), size);
+  // We don't use String here because ArduinoJson library requires the input
+  // buffer to be mutable. If you don't use ArduinoJson, you may as well
+  // use configFile.readString instead.
+  configFile.readBytes(buf.get(), size);
 
-    StaticJsonDocument<200> doc;
-    DeserializationError error = deserializeJson(doc, buf.get());
-    if (error) {
+  StaticJsonDocument<200> doc;
+  DeserializationError error = deserializeJson(doc, buf.get());
+  if (error) {
     Serial.print(F("deserializeJson() failed: "));
     Serial.println(error.f_str());
     return false;
-    }
+  }
 
-    ssid = doc["ssid"];
-    password = doc["password"];
-    return true;
-  */
+  ssid = doc["ssid"];
+  password = doc["password"];
+  mqttServer = doc["mqtt"];
+  return true;
 }
 /**
    Configure the GPIO pins (including RX and TX) is output mode
@@ -197,14 +215,13 @@ void initOutputs() {
   digitalWrite(switch_03, LOW);
   digitalWrite(switch_04, LOW);
 }
-/*
-  void initFS() {
+
+void initFS() {
   if (!LittleFS.begin()) {
     Serial.println("Failed to mount file system");
     return;
   }
-  }
-*/
+}
 
 void turnOn(int switchId) {
   digitalWrite(switchId, HIGH);

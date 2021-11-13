@@ -877,7 +877,7 @@ U 1 1 61887B7B
 P 13965 2430
 F 0 "H4" H 14065 2476 50  0000 L CNN
 F 1 "MountingHole" H 14065 2385 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.2mm_M2_ISO7380_Pad_TopBottom" H 13965 2430 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965" H 13965 2430 50  0001 C CNN
 F 3 "~" H 13965 2430 50  0001 C CNN
 	1    13965 2430
 	1    0    0    -1  
@@ -888,7 +888,7 @@ U 1 1 61888487
 P 13950 2690
 F 0 "H1" H 14050 2736 50  0000 L CNN
 F 1 "MountingHole" H 14050 2645 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.2mm_M2_ISO7380_Pad_TopBottom" H 13950 2690 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965" H 13950 2690 50  0001 C CNN
 F 3 "~" H 13950 2690 50  0001 C CNN
 	1    13950 2690
 	1    0    0    -1  
@@ -899,7 +899,7 @@ U 1 1 61888B22
 P 13955 2955
 F 0 "H3" H 14055 3001 50  0000 L CNN
 F 1 "MountingHole" H 14055 2910 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.2mm_M2_ISO7380_Pad_TopBottom" H 13955 2955 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965" H 13955 2955 50  0001 C CNN
 F 3 "~" H 13955 2955 50  0001 C CNN
 	1    13955 2955
 	1    0    0    -1  
@@ -910,7 +910,7 @@ U 1 1 618891C9
 P 13950 3230
 F 0 "H2" H 14050 3276 50  0000 L CNN
 F 1 "MountingHole" H 14050 3185 50  0000 L CNN
-F 2 "MountingHole:MountingHole_2.2mm_M2_ISO7380_Pad_TopBottom" H 13950 3230 50  0001 C CNN
+F 2 "MountingHole:MountingHole_3.2mm_M3_DIN965" H 13950 3230 50  0001 C CNN
 F 3 "~" H 13950 3230 50  0001 C CNN
 	1    13950 3230
 	1    0    0    -1  
